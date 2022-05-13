@@ -1,0 +1,14 @@
+Metadata-Version: 2.1
+Name: codoniser
+Version: 0.0.1
+Summary: A python package to analyse and optimise codons.
+Home-page: https://github.com/DrBoothTJ/codoniser
+Author: Thomas J. Booth
+Author-email: thoboo@biosustain.dtu.dk
+License: GNU General Public License v3.0
+Description: # codoniser
+        A python package for analysing and optimising codons.
+        
+Platform: UNKNOWN
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
