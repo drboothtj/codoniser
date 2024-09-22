@@ -1,3 +1,0 @@
-[console_scripts]
-codoniser = codoniser.main:main
-
