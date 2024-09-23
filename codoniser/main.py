@@ -1,7 +1,13 @@
-import re
-from collections import Counter
-from codoniser import io, parser
+'''
+main routine for codoniser
+    functions:
+        !!!
+'''
+from typing import List
+from codoniser.utils import io, parser
+from codoniser.utils.classes import CDS
 
+'''
 def get_codons(sequences):
     codons = []
     for sequence in sequences:
@@ -32,35 +38,66 @@ def get_codon_distribution(codons, step_size, window_size):
         window_codons = codons [start_point:end_point]
         mid_point = start_point + ((start_point - end_point)/2)
         codon_count = Counter(window_codons)
-        print(codon_count)
         #add midpoint and counts to data
         start_point += step_size
         end_point = start_point + window_size
     #return x
+'''
 
+def get_cdses_from_fasta(files: List[str]) -> List[CDS]: #change type hint to list of cds objects
+    '''
+    generates cds objects for each protein in a list of fasta files
+        arguments: 
+            files:
+                list of paths to fasta files
+        returns:
+            cdses:
+                a list of cds objects
+    '''
+    cdses = []
+    for file in files:
+        sequence_name, sequence = io.read_cds_from_records(file, 'fasta')
+        for cds in zip(sequence_name, sequence):
+            cds = CDS(source=file, name=sequence_name, sequence=sequence[0])
+            cdses.append(cds)
+
+def get_cdses_from_genbank(files: List[str]) -> List: #change type hint to list of cds objects
+    pass
 
 def main():
-    io.print_to_system('Running codoniser version 0.1.0!')
+    '''
+    main routine for codoniser
+        args:
+            None
+        returns:
+            None
+    '''
+    #io.print_to_system('Running codoniser!') ADD LOGGING
     args = parser.parse_args()
-
-    if args.fasta != None:
-        filename = args.fasta
-        record_names, record_sequences = io.read_file(filename, "fasta")
-    elif args.genbank != None:
-        filename = args.genbank
-        record_names, record_sequences = io.read_file(filename, "genbank") ###NEEDS EDITING TO EXTRACT CDSs
+    if args.mode == 'fasta':
+        cdses = get_cdses_from_fasta(args.files)
+    elif args.mode == 'genbank':
+        cdses = get_cdses_from_genbank(args.files)
     else:
-        io.print_to_system("No input provided; exiting.")
+        print('add a propper error!')
         exit()
-    
+
+    #bar chart
+    #heatmap
+
+    print('done')
+
+    '''
+    #make a more useful datastructure
     codons = get_codons(record_sequences)
     codon_table = get_codon_table(codons)
     io.list_to_csv('codon_table.csv', codon_table)
+    #compare all vs all correlation (pearsons and the other on...)
     
     step_size = 20 #parse input
     window_size = 100 #parse input
     get_codon_distribution(codons, step_size, window_size)
     plot_codon_distribution
-    
+    '''
 if __name__ == '__main__':
     main()

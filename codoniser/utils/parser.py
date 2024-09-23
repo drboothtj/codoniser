@@ -6,6 +6,7 @@ Functions:
 '''
 
 import argparse
+from argparse import RawTextHelpFormatter
 
 def get_parser():
     ''''Create a parser object specific to skewer'''
@@ -13,19 +14,25 @@ def get_parser():
         "codoniser",
         description=
         "codoniser: a python package to analyse and optimise codons.",
-        epilog="Written by Dr. Thom Booth, 2022."
+        epilog="Written by Dr. Thom Booth, 2022.",
+        formatter_class=RawTextHelpFormatter
         )
     parser.add_argument(
-        '-f',
-        '--fasta',
+        '-m',
+        '--mode',
         type=str,
+        required=True,
+        choices=['fasta','genbank'],
         default=None,
-        help='path to a fasta file containing nucleotide sequences'
+        help=
+            'define whether you are analysing fasta or genbank inputs \n' 
+            '(Choices: %(choices)s)\n'
+            '(Default: %(default)s)'
         )
     parser.add_argument(
-        '-g',
-        '--genbank',
+        'files',
         type=str,
+        nargs='+',
         default=None,
         help='path to a genbank file containing nucleotide sequences'
         )
