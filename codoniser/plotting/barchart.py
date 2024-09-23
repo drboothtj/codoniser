@@ -126,4 +126,4 @@ def plot_barchart(cdses: List[CDS]) -> None:
     write_table(labels, counters, categories, filename)
     percentage_counters = convert_counter_to_percentages(counters)
     draw_barchart(labels, percentage_counters, categories, filename + '_percentages')
-    write_table(labels, percentage_counters, categories, filename)
+    write_table(labels, percentage_counters, categories, filename '_percentages')
