@@ -26,7 +26,6 @@ class CDS():
         '''
         #first check divisible by 3
         if divmod(len(self.sequence),3)[1] != 0:
-            print(self.sequence)
             raise BadCDSError(self.name, 'Sequence not divisible by three')
         #next check only nucleotide data
         nucleotides = ['a','t','g','c', 'u', 'A', 'T', 'G', 'C', 'U']

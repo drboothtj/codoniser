@@ -6,6 +6,7 @@ main routine for codoniser
 from typing import List
 from codoniser.utils import io, parser
 from codoniser.utils.classes import CDS
+from codoniser.plotting.barchart import plot_barchart
 
 '''
 def get_codons(sequences):
@@ -56,10 +57,11 @@ def get_cdses_from_fasta(files: List[str]) -> List[CDS]: #change type hint to li
     '''
     cdses = []
     for file in files:
-        sequence_name, sequence = io.read_cds_from_records(file, 'fasta')
-        for cds in zip(sequence_name, sequence):
-            cds = CDS(source=file, name=sequence_name, sequence=sequence[0])
+        sequence_names, sequences = io.read_cds_from_records(file, 'fasta')
+        for sequence_name, sequence in zip(sequence_names, sequences):
+            cds = CDS(source=file, name=sequence_name, sequence=sequence)
             cdses.append(cds)
+    return cdses
 
 def get_cdses_from_genbank(files: List[str]) -> List: #change type hint to list of cds objects
     pass
@@ -82,7 +84,7 @@ def main():
         print('add a propper error!')
         exit()
 
-    #bar chart
+    plot_barchart(cdses)
     #heatmap
 
     print('done')
