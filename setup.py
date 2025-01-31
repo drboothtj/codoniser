@@ -15,6 +15,6 @@ setup(
     url="https://github.com/DrBoothTJ/codoniser",
     license='GNU General Public License v3.0',
     python_requires='>=3.7',
-    install_requires=['bio'],
+    install_requires=['bio','matplotlib', 'seaborn', 'scipy'],
     entry_points={'console_scripts': ["codoniser=codoniser.main:main"]}
 )
