@@ -4,33 +4,16 @@ main routine for codoniser
         !!!
 '''
 from typing import List
+from collections import Counter
+
 from codoniser.utils import io, parser
 from codoniser.utils.classes import CDS
+from codoniser.utils.errors import NoAnalysisError
 from codoniser.plotting.barchart import plot_barchart
+from codoniser.plotting.heatmap import rank
 
 '''
-def get_codons(sequences):
-    codons = []
-    for sequence in sequences:
-        codon = re.findall('...', str(sequence))
-        codons.extend(codon)
-    return codons
-
-def get_codon_table(codons):
-    codon_counts = Counter(codons)
-    triplet_nt = []
-    triplet_count = []
-    triplet_percentage = []
-    codon_table = ['codon','count','percentage']
-    for triplet, count in codon_counts.items():
-        triplet_nt.append(triplet)
-        triplet_count.append(count)
-    total_count = sum(triplet_count)
-    for count in triplet_count:
-        triplet_percentage.append((count/total_count)*100)
-    for i in range(0,len(triplet_nt)):
-        codon_table.append([triplet_nt[i], triplet_count[i],triplet_percentage[i]])
-    return codon_table
+consider adding sliding window one day...
 
 def get_codon_distribution(codons, step_size, window_size):
     start_point = 0
@@ -45,12 +28,12 @@ def get_codon_distribution(codons, step_size, window_size):
     #return x
 '''
 
-def get_cdses_from_fasta(files: List[str]) -> List[CDS]: #change type hint to list of cds objects
+def get_cdses_from_fasta(files: List[str]) -> List[CDS]: 
     '''
-    generates cds objects for each protein in a list of fasta files
+    generates cds objects for each cds in a fasta file
         arguments: 
-            files:
-                list of paths to fasta files
+            file:
+                paths to fasta file
         returns:
             cdses:
                 a list of cds objects
@@ -63,8 +46,36 @@ def get_cdses_from_fasta(files: List[str]) -> List[CDS]: #change type hint to li
             cdses.append(cds)
     return cdses
 
-def get_cdses_from_genbank(files: List[str]) -> List: #change type hint to list of cds objects
-    pass
+def get_data(cdses):
+    '''
+    '''
+    labels = list({cds.source for cds in cdses})
+    counters = get_totals(cdses, labels)
+    assert len(labels) == len(counters)
+    categories = {key for counter in counters for key in counter.keys()}
+    return labels, counters, categories 
+
+def get_totals(cdses: List[CDS], labels: List[str]) -> List[Counter]:
+    '''
+    Combines and extracts counters from cdses relative to the labels
+        arguments:
+            cdses:
+                list of CDS objects
+            labels:
+                list of lables
+        returns:
+            counters:
+                list of counters
+    '''
+    counters = []
+    for label in labels:
+        counter = Counter()
+        for cds in cdses:
+            if cds.source == label:
+                counter += cds.codon_count()
+        counters.append(counter)
+    return counters
+
 
 def main():
     '''
@@ -76,30 +87,33 @@ def main():
     '''
     #io.print_to_system('Running codoniser!') ADD LOGGING
     args = parser.parse_args()
-    if args.mode == 'fasta':
-        cdses = get_cdses_from_fasta(args.files)
-    elif args.mode == 'genbank':
-        cdses = get_cdses_from_genbank(args.files)
+    cdses = get_cdses_from_fasta(args.files)
+    #set a flag to ensure some analysis was done
+    analysis_complete = False
+    sources, counters, categories = get_data(cdses)
+    #barcharts
+    if args.barchart:
+        plot_barchart(sources, counters, categories)
+        analysis_complete = True
+    #heatmaps
+    if args.pearsons == True:
+        rank(sources, counters, categories, 'pearsons')
+        analysis_complete = True
+    if args.spearmans == True:
+        rank(sources, counters, categories, 'spearmans')
+        analysis_complete = True
+    #check if anaylsis run
+    if analysis_complete == False:
+        raise NoAnalysisError('No analysis was requested. Use the paramaters to perform an analysis.')
     else:
-        print('add a propper error!')
-        exit()
-
-    plot_barchart(cdses)
-    #heatmap
-
-    print('done')
-
-    '''
-    #make a more useful datastructure
-    codons = get_codons(record_sequences)
-    codon_table = get_codon_table(codons)
-    io.list_to_csv('codon_table.csv', codon_table)
-    #compare all vs all correlation (pearsons and the other on...)
+        print('Codoniser completed the analysis.')
     
-    step_size = 20 #parse input
-    window_size = 100 #parse input
-    get_codon_distribution(codons, step_size, window_size)
-    plot_codon_distribution
-    '''
+
+    #in the future ...
+        #sliding window <- requires positional info from gbk
+        #identify outliers?
+        #identify genes with rare codons
+        #anything else?
+
 if __name__ == '__main__':
     main()

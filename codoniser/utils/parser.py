@@ -9,7 +9,7 @@ import argparse
 from argparse import RawTextHelpFormatter
 
 def get_parser():
-    ''''Create a parser object specific to skewer'''
+    ''''Create a parser object specific to codoniser'''
     parser = argparse.ArgumentParser(
         "codoniser",
         description=
@@ -18,15 +18,39 @@ def get_parser():
         formatter_class=RawTextHelpFormatter
         )
     parser.add_argument(
-        '-m',
-        '--mode',
-        type=str,
-        required=True,
-        choices=['fasta','genbank'],
+        '-b',
+        '--barchart',
+        action='store_true',
         default=None,
         help=
-            'define whether you are analysing fasta or genbank inputs \n' 
-            '(Choices: %(choices)s)\n'
+            'provide a prefix for codon usage barchart'
+            '(Default: %(default)s)'
+        )
+    parser.add_argument(
+        '-p',
+        '--pearsons',
+        action='store_true',
+        default=None,
+        help=
+            'provide a prefix for pearsons rank correlation heatmap and tables'
+            '(Default: %(default)s)'
+        )
+    parser.add_argument(
+        '-s',
+        '--spearmans',
+        action='store_true',
+        default=None,
+        help=
+            'provide a prefix for spearmans rank correlation heatmap and tables'
+            '(Default: %(default)s)'
+        )
+    parser.add_argument(
+        '-w',
+        '--window',
+        action='store_true',
+        default=None,
+        help=
+            'provide a prefix for sliding window analysis'
             '(Default: %(default)s)'
         )
     parser.add_argument(
@@ -34,7 +58,7 @@ def get_parser():
         type=str,
         nargs='+',
         default=None,
-        help='path to a genbank file containing nucleotide sequences'
+        help='path to a fasta file containing nucleotide sequences of each gene'
         )
     return parser
 

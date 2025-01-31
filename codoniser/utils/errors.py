@@ -9,6 +9,12 @@ class CodoniserError(Exception):
     '''
     pass
 
+class NoAnalysisError(CodoniserError):
+    '''
+    error raised when no analysis was completed. 
+    '''
+    pass
+
 class BadCDSError(CodoniserError):
     '''
     error when catching bad cds input

@@ -37,7 +37,6 @@ def write_table(
         write_lines.append(new_line)
     list_to_csv(filename + '.csv', write_lines)
 
-
 def convert_counter_to_percentages(counters: List) -> List:
     '''
     Take a list of counters and convert each from raw values to percentage of total
@@ -88,28 +87,8 @@ def draw_barchart(labels: List, counters: List[Counter], categories: List, filen
     # Save as svg
     plt.savefig(filename + '.svg') #add options
 
-def get_totals(cdses: List[CDS], labels: List[str]) -> List[Counter]:
-    '''
-    Combines and extracts counters from cdses relative to the labels
-        arguments:
-            cdses:
-                list of CDS objects
-            labels:
-                list of lables
-        returns:
-            counters:
-                list of counters
-    '''
-    counters = []
-    for label in labels:
-        counter = Counter()
-        for cds in cdses:
-            if cds.source == label:
-                counter += cds.codon_count()
-        counters.append(counter)
-    return counters
 
-def plot_barchart(cdses: List[CDS]) -> None:
+def plot_barchart(labels, counters, categories) -> None:
     '''
     plots a barchart svgs
         arguments:
@@ -117,13 +96,9 @@ def plot_barchart(cdses: List[CDS]) -> None:
         returns:
             None
     '''
-    labels = list({cds.source for cds in cdses})
-    counters = get_totals(cdses, labels)
-    assert len(labels) == len(counters)
-    categories = {key for counter in counters for key in counter.keys()}
     filename = 'barchart'
     draw_barchart(labels, counters, categories, filename)
     write_table(labels, counters, categories, filename)
     percentage_counters = convert_counter_to_percentages(counters)
     draw_barchart(labels, percentage_counters, categories, filename + '_percentages')
-    write_table(labels, percentage_counters, categories, filename '_percentages')
+    write_table(labels, percentage_counters, categories, filename + '_percentages')
