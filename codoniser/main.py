@@ -6,9 +6,11 @@ main routine for codoniser
 from typing import List
 from collections import Counter
 
+import glob
+
 from codoniser.utils import io, parser
 from codoniser.utils.classes import CDS
-from codoniser.utils.errors import NoAnalysisError
+from codoniser.utils.errors import BadInputError, NoAnalysisError
 from codoniser.plotting.barchart import plot_barchart
 from codoniser.plotting.heatmap import rank
 
@@ -39,11 +41,18 @@ def get_cdses_from_fasta(files: List[str]) -> List[CDS]:
                 a list of cds objects
     '''
     cdses = []
-    for file in files:
+    file_list = []
+    for file in files: 
+        file_list.extend(glob.glob(file)) #allow for wildcards
+    for file in file_list:
         sequence_names, sequences = io.read_cds_from_records(file, 'fasta')
         for sequence_name, sequence in zip(sequence_names, sequences):
             cds = CDS(source=file, name=sequence_name, sequence=sequence)
             cdses.append(cds)
+    if len(cdses) < 1:
+        raise BadInputError(
+            "No CDSs found in input. Check the correct file format was provided."
+        )
     return cdses
 
 def get_data(cdses):

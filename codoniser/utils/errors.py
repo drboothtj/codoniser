@@ -15,6 +15,12 @@ class NoAnalysisError(CodoniserError):
     '''
     pass
 
+class BadInputError(CodoniserError):
+    '''
+    error raised when no cdses are found in the input data
+    '''
+    pass
+
 class BadCDSError(CodoniserError):
     '''
     error when catching bad cds input
