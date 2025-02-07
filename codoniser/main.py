@@ -129,10 +129,12 @@ def main():
             )
     print('Codoniser completed the analysis.')
 
-    #TODO
-    #sliding window <- requires positional info from gbk
-    #identify outliers e.g. genes with wierd codon composition?
-    #add logging
+    # TODO
+    # sliding window <- requires positional info from gbk
+    # add correlation scatter for 2 strains
+    # identify outliers e.g. genes with wierd codon composition?
+    # add logging
+    # add output dir designation
 
 if __name__ == '__main__':
     main()
