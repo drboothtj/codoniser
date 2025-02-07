@@ -124,5 +124,5 @@ def rank(labels, counters, categories, analysis_type: str):
     correlation_matrix, pvalue_matrix = get_matracies(counters, categories, analysis_type)
     write_dendro_heatmap(correlation_matrix, labels, analysis_type + '.svg')
 
-    write_data(analysis_type + '_correlations.tsv', correlation_matrix, labels)
-    write_data(analysis_type + '_pvalues.tsv', pvalue_matrix, labels)
+    write_data(analysis_type + '_correlations.csv', correlation_matrix, labels)
+    write_data(analysis_type + '_pvalues.csv', pvalue_matrix, labels)
