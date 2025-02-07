@@ -13,7 +13,7 @@ def get_parser():
     parser = argparse.ArgumentParser(
         "codoniser",
         description=
-        "codoniser: a python package to analyse and optimise codons.",
+        "codoniser: a python package to visualise codon usage, and codon usage correlation.",
         epilog="Written by Dr. Thom Booth, 2022.",
         formatter_class=RawTextHelpFormatter
         )
