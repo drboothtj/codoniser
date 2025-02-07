@@ -3,7 +3,7 @@ main routine for codoniser
     functions:
         !!!
 '''
-from typing import List
+from typing import List, Union
 from collections import Counter
 
 import glob
@@ -30,7 +30,7 @@ def get_codon_distribution(codons, step_size, window_size):
     #return x
 '''
 
-def get_cdses_from_fasta(files: List[str]) -> List[CDS]: 
+def get_cdses_from_fasta(files: List[str]) -> List[CDS]:
     '''
     generates cds objects for each cds in a fasta file
         arguments: 
@@ -42,7 +42,7 @@ def get_cdses_from_fasta(files: List[str]) -> List[CDS]:
     '''
     cdses = []
     file_list = []
-    for file in files: 
+    for file in files:
         file_list.extend(glob.glob(file)) #allow for wildcards
     for file in file_list:
         sequence_names, sequences = io.read_cds_from_records(file, 'fasta')
@@ -55,14 +55,25 @@ def get_cdses_from_fasta(files: List[str]) -> List[CDS]:
         )
     return cdses
 
-def get_data(cdses):
+def get_data(cdses) -> Union[List[str], List[Counter], List[str]]:
     '''
+    takes a list of cds objects and extracts the 
+    labels, counters and possible categories (i.e. codons)
+        arguments:
+            cdses: a list of codoniser cds objects
+        returns:
+            labels: 
+                list of sources (e.g. organisms) from all CDSes
+            counters:
+                a list of all the codon Counters for each CDS
+            categories:
+                a list of all possible catgeories (i.e. codons)
     '''
     labels = list({cds.source for cds in cdses})
     counters = get_totals(cdses, labels)
     assert len(labels) == len(counters)
     categories = {key for counter in counters for key in counter.keys()}
-    return labels, counters, categories 
+    return labels, counters, categories
 
 def get_totals(cdses: List[CDS], labels: List[str]) -> List[Counter]:
     '''
@@ -105,24 +116,23 @@ def main():
         plot_barchart(sources, counters, categories)
         analysis_complete = True
     #heatmaps
-    if args.pearsons == True:
+    if args.pearsons is True:
         rank(sources, counters, categories, 'pearsons')
         analysis_complete = True
-    if args.spearmans == True:
+    if args.spearmans is True:
         rank(sources, counters, categories, 'spearmans')
         analysis_complete = True
     #check if anaylsis run
-    if analysis_complete == False:
-        raise NoAnalysisError('No analysis was requested. Use the paramaters to perform an analysis.')
-    else:
-        print('Codoniser completed the analysis.')
-    
+    if analysis_complete is False:
+        raise NoAnalysisError(
+            'No analysis was requested. Use the paramaters to perform an analysis.'
+            )
+    print('Codoniser completed the analysis.')
 
-    #in the future ...
-        #sliding window <- requires positional info from gbk
-        #identify outliers?
-        #identify genes with rare codons
-        #anything else?
+    #TODO
+    #sliding window <- requires positional info from gbk
+    #identify outliers e.g. genes with wierd codon composition?
+    #add logging
 
 if __name__ == '__main__':
     main()

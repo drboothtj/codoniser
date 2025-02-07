@@ -9,7 +9,6 @@ from collections import Counter
 import numpy as np
 import matplotlib.pyplot as plt
 
-from codoniser.utils.classes import CDS
 from codoniser.utils.io import list_to_csv
 
 def write_table(
@@ -71,7 +70,7 @@ def draw_barchart(labels: List, counters: List[Counter], categories: List, filen
     '''
     data = np.array([[counter.get(category, 0) for category in categories] for counter in counters])
     # Set up parameters for the plot
-    fig, ax = plt.subplots(figsize=(10, 6)) #maybe change the size?
+    _, ax = plt.subplots(figsize=(10, 6)) #maybe change the size?
     n_counters = len(counters)
     bar_width = 10 / (n_counters * 12) #adjust the bar width to the number of samples
     index = np.arange(len(categories))
