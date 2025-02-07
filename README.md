@@ -20,7 +20,7 @@ Or, clone this repository and install manually.
 
 `codoniser` takes fasta nucleic acid files (`.fna`) as positional input. This file should contain the DNA sequences of all ORFs from the source genome.
 Be careful to ensure that you have not included pseudogenes or other none-CDS sequences as this will interfer with the analysis (and probably cause an error!).
-Example input can be found, [here](https://raw.githubusercontent.com/drboothtj/codoniser/example_data/example_in).
+Example input can be found, [here](https://github.com/drboothtj/codoniser/tree/main/example_data/example_in).
 
 `codoniser` currently offers three analyses:
 
@@ -34,7 +34,8 @@ Therefore, to run all three analysis you can run, for example:
 `codoniser -b -p -s *.fna`
 
 ## Output
-`codoniser` produces a number of tables and figures as output. The example outputs can be found, [here](https://raw.githubusercontent.com/drboothtj/codoniser/main/example_data/example_out!).
+`codoniser` produces a number of tables and figures as output. 
+The example outputs can be found, [here](https://github.com/drboothtj/codoniser/tree/main/example_data/example_out).
 
 ### Bar chart
 `codoniser` can produce simple bar charts. It will produce an SVG for both the raw counts and the percantage usage. 
