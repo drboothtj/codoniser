@@ -40,8 +40,9 @@ Therefore, to run all three analysis you can run, for example:
 WIP
 
 ### Spearman's and Pearson's Rank
+`codoniser` can analyse the codon usage correlations and produce heatmaps to visualise there relationships. It will provide the correlation matrix, the correlation p-values, the codon counts, and the rank data separate `.csv` files. It will also provide a `.svg` image of the heatmap. Below is the SVG produced by using the example data from this repository. You can easily see the codon bias between the low-GC and the high-GC organisms.
 
-WIP
+![example of spearman's rank heatmap](https://raw.githubusercontent.com/drboothtj/codoniser/main/example_data/example_out/spearmans_rank/spearmans.svg)
 
 ## Citation
 Coming soon...
