@@ -32,7 +32,7 @@ def get_parser():
         action='store_true',
         default=None,
         help=
-            'provide a prefix for pearsons rank correlation heatmap and tables'
+            'perform pearsons rank correlation analysis'
             '(Default: %(default)s)'
         )
     parser.add_argument(
@@ -41,16 +41,7 @@ def get_parser():
         action='store_true',
         default=None,
         help=
-            'provide a prefix for spearmans rank correlation heatmap and tables'
-            '(Default: %(default)s)'
-        )
-    parser.add_argument(
-        '-w',
-        '--window',
-        action='store_true',
-        default=None,
-        help=
-            'provide a prefix for sliding window analysis'
+            'perform spearmans rank correlation analysis'
             '(Default: %(default)s)'
         )
     parser.add_argument(
