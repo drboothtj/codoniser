@@ -3,8 +3,7 @@ perform spearman's rank correlation analysis for codoniser
     functions:
         !!!
 '''
-from typing import List, Dict
-from os.path import basename, splitext
+from typing import List
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -48,8 +47,8 @@ def print_rank_data(filename: str, counters: List, labels: List) -> None:
         line.append(label)
         line.extend(counts)
         count_lines.append(line)
-    list_to_csv(filename + '_ranks.tsv', rank_lines)
-    list_to_csv(filename + '_counts.tsv', count_lines)
+    list_to_csv(filename + '_ranks.csv', rank_lines)
+    list_to_csv(filename + '_counts.csv', count_lines)
 
 def write_data(filename, data, labels):
     '''
@@ -85,7 +84,7 @@ def write_dendro_heatmap(correlation_matrix, labels: List, filename: str) -> Non
         xticklabels=labels,
         yticklabels=labels
         )
-    plt.savefig(filename + '.svg')
+    plt.savefig(filename)
 
 def get_matracies(counters, categories, analysis_type):
     '''
@@ -104,7 +103,6 @@ def get_matracies(counters, categories, analysis_type):
                 correlation, pvalue = spearmanr(data[i], data[j])
             if analysis_type == 'pearsons':
                 correlation, pvalue = pearsonr(data[i], data[j])
-            #catch error if neither
             correlation_matrix[i, j] = correlation
             correlation_matrix[j, i] = correlation
             pvalue_matrix[i, j] = pvalue
@@ -121,13 +119,10 @@ def rank(labels, counters, categories, analysis_type: str):
     '''
     counters = get_uniform_counters(counters) #none equal counters will screw up ranking
 
-    filename = analysis_type + '_rank_data.csv'
-    print_rank_data(filename, counters, labels) # this is done twice if you do both
+    print_rank_data(analysis_type, counters, labels) # this is done twice if you do both
 
     correlation_matrix, pvalue_matrix = get_matracies(counters, categories, analysis_type)
-    write_dendro_heatmap(correlation_matrix, labels, filename)
+    write_dendro_heatmap(correlation_matrix, labels, analysis_type + '.svg')
 
-    write_data(filename + '.tsv', correlation_matrix, labels)
-    write_data(filename + '_pvalues.tsv', pvalue_matrix, labels)
-
-    # add clustering output - do it later - difficult as requires thresholding
+    write_data(analysis_type + '_correlations.tsv', correlation_matrix, labels)
+    write_data(analysis_type + '_pvalues.tsv', pvalue_matrix, labels)
