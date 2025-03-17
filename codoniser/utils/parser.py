@@ -24,7 +24,7 @@ def get_parser():
         default=None,
         help=
             'provide a prefix for codon usage barchart'
-            '(Default: %(default)s)'
+            '(Default: FALSE)'
         )
     parser.add_argument(
         '-p',
@@ -33,7 +33,7 @@ def get_parser():
         default=None,
         help=
             'perform pearsons rank correlation analysis'
-            '(Default: %(default)s)'
+            '(Default: FALSE)'
         )
     parser.add_argument(
         '-s',
@@ -42,7 +42,16 @@ def get_parser():
         default=None,
         help=
             'perform spearmans rank correlation analysis'
-            '(Default: %(default)s)'
+            '(Default: FALSE)'
+        )
+    parser.add_argument(
+        '-k',
+        '--skip-malformed-cds',
+        action='store_true',
+        default=None,
+        help=
+            'perform spearmans rank correlation analysis'
+            '(Default: FALSE)'
         )
     parser.add_argument(
         'files',

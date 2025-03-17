@@ -10,7 +10,7 @@ import glob
 
 from codoniser.utils import io, parser
 from codoniser.utils.classes import CDS
-from codoniser.utils.errors import BadInputError, NoAnalysisError
+from codoniser.utils.errors import BadCDSError, BadInputError, NoAnalysisError
 from codoniser.plotting.barchart import plot_barchart
 from codoniser.plotting.heatmap import rank
 
@@ -30,7 +30,7 @@ def get_codon_distribution(codons, step_size, window_size):
     #return x
 '''
 
-def get_cdses_from_fasta(files: List[str]) -> List[CDS]:
+def get_cdses_from_fasta(files: List[str], skip_malformed: bool) -> List[CDS]:
     '''
     generates cds objects for each cds in a fasta file
         arguments: 
@@ -47,7 +47,11 @@ def get_cdses_from_fasta(files: List[str]) -> List[CDS]:
     for file in file_list:
         sequence_names, sequences = io.read_cds_from_records(file, 'fasta')
         for sequence_name, sequence in zip(sequence_names, sequences):
-            cds = CDS(source=file, name=sequence_name, sequence=sequence)
+            try:
+                cds = CDS(source=file, name=sequence_name, sequence=sequence)
+            except BadCDSError:
+                if skip_malformed is True:
+                    continue
             cdses.append(cds)
     if len(cdses) < 1:
         raise BadInputError(
@@ -107,7 +111,7 @@ def main():
     '''
     #io.print_to_system('Running codoniser!') ADD LOGGING
     args = parser.parse_args()
-    cdses = get_cdses_from_fasta(args.files)
+    cdses = get_cdses_from_fasta(args.files, args.skip_malformed_cds)
     #set a flag to ensure some analysis was done
     analysis_complete = False
     sources, counters, categories = get_data(cdses)
