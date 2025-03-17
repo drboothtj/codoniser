@@ -57,3 +57,5 @@ Coming soon...
 ## Version History
 - 1.0.0
   - Initial release
+- 1.0.1
+  - Add skip-malformed-cds parameter for skipping pseudogenes etc.
